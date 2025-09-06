@@ -39,7 +39,6 @@ public class Main {
 
                 if (longitud < mejorLongitud) {
                     mejorLongitud = longitud;
-                    mejorTour = tour.clone();
                 }
             }
 
@@ -65,13 +64,27 @@ public class Main {
                 int v = tour[0];
                 tau[u][v] += delta;
                 tau[v][u] = tau[u][v];
+
+                int progreso = (int) ((it + 1) / (double) maxIter * 50); 
+                if ((it + 1) % 10 == 0 || it + 1 == maxIter) { 
+                    
+                    System.out.print("\rProgreso: [");
+
+                    for (int i = 0; i < 50; i++) {
+                        if (i < progreso) {
+                            System.out.print("=");
+                        } else {
+                            System.out.print(" ");
+                        }
+                    }
+                    System.out.print("] " + (it + 1) + "/" + maxIter + " Mejor hasta ahora: " + mejorLongitud);
+                }
+                
+
+                if (it + 1 == maxIter) {
+                    System.out.println("\n\nMejor longitud encontrada: " + mejorLongitud);
+                }
             }
-
-            System.out.println("Iteración " + it + " mejor hasta ahora: " + mejorLongitud);
         }
-
-        System.out.println("\nMejor longitud encontrada: " + mejorLongitud);
-
-        System.out.println();
     }
 }
