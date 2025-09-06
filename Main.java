@@ -13,8 +13,8 @@ public class Main {
         double evaporacion = Double.parseDouble(args[1]);
         int maxIter = Integer.parseInt(args[2]);
 
-        double alpha = 10.0;
-        double beta = 1.0;
+        double alpha = 3.0;
+        double beta = 7.0;
         double Q = 500.0;
 
         List<Ciudad> ciudades = LeerArchivo.cargarCiudades("a280.tsp");
@@ -92,6 +92,10 @@ public class Main {
                     }
                     System.out.println();
                 }
+                int optimo = 2579;
+                double margenError = 100.0 * (mejorLongitud - optimo) / optimo;
+                System.out.printf("Óptimo conocido: %d\n", optimo);
+                System.out.printf("Margen de error: %.2f%%\n", margenError);
             }
         }
     }
