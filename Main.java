@@ -13,13 +13,26 @@ public class Main {
         double evaporacion = Double.parseDouble(args[1]);
         int maxIter = Integer.parseInt(args[2]);
 
-        double alpha = 3.0;
-        double beta = 7.0;
-        double Q = 500.0;
+        double alpha = 1.0; // impoetancia de feromonas
+        double beta = 3.0; // importancia de la heuristica, un valor mas alto hace que las hormigas prefieran rutas mas cortas
+        double Q = 1000.0; // cantidad de feromona depositada por hormiga
 
         List<Ciudad> ciudades = LeerArchivo.cargarCiudades("a280.tsp");
         int[][] dist = UtilidadesTSP.matrizDistancias(ciudades);
-        double[][] tau = UtilidadesTSP.inicializarFeromonas(ciudades.size(), 0.1);
+        
+        int sumaDistancias = 0;
+        int numPares = 0;
+
+        for (int i = 0; i < dist.length; i++) {
+            for (int j = i + 1; j < dist[i].length; j++) { 
+                sumaDistancias += dist[i][j];
+                numPares++;
+            }
+        }
+
+        double distanciaPromedio = (double) sumaDistancias / numPares;
+        double valorInicialFeromona = 1.0 / (ciudades.size() * distanciaPromedio);
+        double[][] tau = UtilidadesTSP.inicializarFeromonas(ciudades.size(), valorInicialFeromona);
 
         int mejorLongitud = Integer.MAX_VALUE;
         int[] mejorTour = null;
@@ -71,15 +84,15 @@ public class Main {
 
             int progreso = (int) ((it + 1) / (double) maxIter * 50);
             if ((it + 1) % 10 == 0 || it + 1 == maxIter) {
-                System.out.print("\rProgreso: ");
+                System.out.print("\rProgreso: [");
                 for (int i = 0; i < 50; i++) {
                     if (i < progreso) {
                         System.out.print("#");
                     } else {
-                        System.out.print(" ");
+                        System.out.print(".");
                     }
                 }
-                System.out.print(" " + (it + 1) + "/" + maxIter + " Mejor hasta ahora: " + mejorLongitud);
+                System.out.print("] " + (it + 1) + "/" + maxIter + " Mejor hasta ahora: " + mejorLongitud);
             }
 
             if (it + 1 == maxIter) {
